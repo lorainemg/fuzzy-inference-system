@@ -1,6 +1,7 @@
 from aggregation import Mamdani, Larsen
 from defuzzification import *
 from linguistic_var import Adjective, Variable
+from rule import Rule
 import numpy as np
 
 class FuzzyInferenceSystem:
@@ -23,15 +24,38 @@ class FuzzyInferenceSystem:
 
     def infer(self, rules, variables, adjectives, domain, precision):
         self.variables = variables
+        self.adjectives = adjectives
         self.start, self.end = domain
         self.precision = precision
-        self.rules = rules
-        self.aggregation = self.aggr_mth(rules, variables, adjectives, domain, precision)
+        blocks_rules = self.separate_rules(rules)
+        self.aggregations = []
+        for out_put_var, rules in blocks_rules.items():
+            self.aggregations.append(self.aggr_mth(rules, variables, adjectives, domain, precision, out_put_var))
     
+    def separate_rules(self, rules):
+        blocks = {}
+        for rule in rules:
+            consequents = rule.consequent_str.split('and')
+            for consequent in consequents:
+                rule = Rule(rule.antecedent_str + 'then' + consequent)
+                rule.parse(self.variables, self.adjectives)
+                try: 
+                    blocks[rule.consequent.variable.name].append(rule)
+                except:
+                    blocks[rule.consequent.variable.name] = [rule]
+        return blocks
+
     def evaluate(self, inputs):
         inputs = self._process_inputs(inputs)
-        sample, membership = self.aggregation.evaluate(inputs)
-        return self.defuz_mth(sample, membership), sample, membership
+        outputs = {}
+        for aggr in self.aggregations:
+            sample, membership = aggr.evaluate(inputs)
+            value = self.defuz_mth(sample, membership) 
+            outputs[aggr.out_var] = {
+                'value': value, 
+                'sample': sample, 
+                'membership': membership}
+        return outputs
 
     def _process_inputs(self, inputs):
         results = {}

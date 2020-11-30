@@ -72,13 +72,13 @@ class Consequent:
 
 class Rule:
     def __init__(self, sentence:str):
-        self._antecedent_str, self._consequent_str = sentence.split('then')
+        self.antecedent_str, self.consequent_str = sentence.split('then')
         self.antecedent = None
         self.consequent = None
 
     def parse(self, variables, adjectives): 
-        self.antecedent:Antecedent = Antecedent(self._antecedent_str, variables, adjectives)
-        self.consequent:Consequent = Consequent(self._consequent_str, variables, adjectives) 
+        self.antecedent:Antecedent = Antecedent(self.antecedent_str, variables, adjectives)
+        self.consequent:Consequent = Consequent(self.consequent_str, variables, adjectives) 
 
     def evaluate(self, values):
         'Evaluates the rule were all the values correspond to the variables values'

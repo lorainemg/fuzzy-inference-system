@@ -1,12 +1,11 @@
 import numpy as np
 
 class Mamdani:
-    def __init__(self, rules, variables, adjectives, domain, precision):
-        for rule in rules:
-            rule.parse(variables, adjectives)
+    def __init__(self, rules, variables, adjectives, domain, precision, out_var):
         self.rules = rules
         self.start, self.end = domain
         self.precision = precision
+        self.out_var = out_var
 
     def evaluate(self, values):
         results = [rule.evaluate(values) for rule in self.rules]
@@ -23,12 +22,11 @@ class Mamdani:
 
 
 class Larsen:
-    def __init__(self, rules, variables, adjectives, domain, precision):
-        for rule in rules:
-            rule.parse(variables, adjectives)
+    def __init__(self, rules, variables, adjectives, domain, precision, out_var):
         self.rules = rules
         self.start, self.end = domain
         self.precision = precision
+        self.out_var = out_var
 
     def evaluate(self, values):
         results = [rule.evaluate(values) for rule in self.rules]
@@ -47,12 +45,11 @@ class Larsen:
         return sample, membership
 
 class TSK:
-    def __init__(self, rules, variables, adjectives, domain, precision):
-        for rule in rules:
-            rule.parse(variables, adjectives)
+    def __init__(self, rules, variables, adjectives, domain, precision, out_var):
         self.rules = rules
         self.start, self.end = domain
         self.precision = precision
+        self.out_var = out_var
 
     def evaluate(self, values):
         results = [rule.evaluate(values) for rule in self.rules]

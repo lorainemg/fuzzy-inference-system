@@ -68,7 +68,9 @@ rule17 = Rule('if right is near and center is near then'
             'pr is low') 
 rule18 = Rule('if right is medium and center is medium then'
             'pr is low')  
-ruleBlock3 = [rule14, rule15, rule16, rule18]
+ruleBlock3 = [rule14, rule15, rule16, rule17, rule18]
+
+rules = ruleBlock1 + ruleBlock2 + ruleBlock3
 
 inputs = {
     'left': 40,
@@ -78,8 +80,7 @@ inputs = {
 
 def evaluate(fuzzy_sistem, rules, inputs):
     fuzzy_system.infer(rules, variables, adjectives, (0, 1), 0.01)
-    result, sample, membership = fuzzy_system.evaluate(inputs)
-    return result, sample, membership
+    return fuzzy_system.evaluate(inputs)
 
     
 def plot_result(sample, membership, name):
@@ -98,17 +99,12 @@ if __name__ == "__main__":
     fuzzy_system = FuzzyInferenceSystem(agg_mth, defuzz_mth)
     inputs = {'left': left, 'right': right, 'center': center}
     
-    result, sample, membership = evaluate(fuzzy_system, ruleBlock1, inputs)
-    print('The result of the first rule block corresponding to the plausibility left is', result)
-    plot_result(sample, membership, 'ruleblock1')
+    result = evaluate(fuzzy_system, rules, inputs)
+    for var, output in result.items():
+        value = output['value']
+        print(f'The result of the variable corresponding to {var} is', value)
+        sample = output['sample']
+        plot_result(sample, output['membership'], 'ruleblock' + var)
 
-    result, sample, membership = evaluate(fuzzy_system, ruleBlock2, inputs)
-    print('The result of the second rule block corresponding to the plausibility center is', result)
-    plot_result(sample, membership, 'ruleblock2')
-    
-    result, sample, membership = evaluate(fuzzy_system, ruleBlock3, inputs)
-    print('The result of the third rule block corresponding to the plausibility right is', result)
-    plot_result(sample, membership, 'ruleblock3')
-    
     for var in variables.values():
         var.plot(sample)
