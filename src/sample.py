@@ -1,104 +1,116 @@
 from system import FuzzyInferenceSystem
-from membership import Triangular, Trapezoidal
+from membership import Triangular, Trapezoidal, Singleton
 from rule import Antecedent, Consequent, Rule
 from linguistic_var import Adjective, Variable
-import matplotlib.pyplot as pl
+import matplotlib.pyplot as plt
+import numpy as np
 
 
-litle = Adjective('litle', Trapezoidal(0, 5, 25, 30))
-regular = Adjective('regular', Triangular(25, 40, 55))
-much = Adjective('much', Triangular(50, 60, 80))
-full = Adjective('full', Trapezoidal(75, 85, 90, 100))
+near = Adjective('near', Trapezoidal(-1, 0, 1, 10))
+medium = Adjective('medium', Triangular(1, 10, 40))
+far = Adjective('far', Trapezoidal(10, 40, 50, 60))
 
-amount = Variable('amount', litle, regular, much, full)
+left = Variable('left', near, medium, far)
+right = Variable('right', near, medium, far)
+center = Variable('center', near, medium, far)
 
-white_c = Adjective('white_cotton', Trapezoidal(-2, 0, 5, 17))
-color_c = Adjective('color_cotton', Triangular(15, 25, 32))
-white_d = Adjective('white_delicate', Trapezoidal(30, 37, 40, 47))
-color_d = Adjective('color_delicate', Triangular(45, 53, 62))
-white_s = Adjective('white_synthetic', Trapezoidal(55, 62, 75, 80))
-color_s = Adjective('color_synthetic', Triangular(75, 82, 100))
+left.plot(np.arange(0, 50, 1))
+center.plot(np.arange(0, 50, 1))
+right.plot(np.arange(0, 50, 1))
 
-type = Variable('type', white_c, color_c, white_d, color_d, white_s, color_s)
 
-very_small = Adjective('very_small', Triangular(0, 13, 25))
-small = Adjective('small', Triangular(20, 32, 45))
-medium = Adjective('medium', Triangular(40, 50, 60))
-big = Adjective('big', Triangular(55, 67, 80))
-very_big = Adjective('very_big', Triangular(75, 80, 100))
+low = Adjective('low', Trapezoidal(0, 0.10, 0.30, 0.40))
+normal = Adjective('normal', Triangular(0.30, 0.40, 0.60))
+high = Adjective('high', Triangular(0.50, 0.80, 0.90))
+very_high = Adjective('very_high', Trapezoidal(0.60, 0.80, 1, 1.2))
 
-agua_level = Variable('agua_level', very_small, small, medium, big, very_big)
+plausibility_left = Variable('pl', low, normal, high, very_high)
+plausibility_right = Variable('pr', low, normal, high, very_high)
+plausibility_center = Variable('pc', low, normal, high, very_high)
 
 adjectives = {value.name: value for var_name, value in locals().items() if isinstance(value, Adjective)}
 variables = {value.name: value for var_name, value in locals().items() if isinstance(value, Variable)}
 
-rule1 = Rule('if amount is litle and type is white_synthetic then '
-            'agua_level is very_small')
-rule2 = Rule('if amount is litle and type is color_synthetic then '
-            'agua_level is very_small')
-rule3 = Rule('if amount is litle and type is white_delicate then '
-            'agua_level is small')
-rule4 = Rule('if amount is litle and type is color_delicate then '
-            'agua_level is small')
-rule5 = Rule('if amount is litle and type is white_cotton then '
-            'agua_level is medium')
-rule6 = Rule('if amount is litle and type is color_cotton then '
-            'agua_level is big')
-rule7 = Rule('if amount is regular and type is white_synthetic then '
-            'agua_level is small')
-rule8 = Rule('if amount is regular and type is color_synthetic then '
-            'agua_level is medium')
-rule9 = Rule('if amount is regular and type is white_delicate then '
-            'agua_level is medium')
-rule10 = Rule('if amount is regular and type is color_delicate then '
-            'agua_level is big')
-rule11 = Rule('if amount is regular and type is white_cotton then '
-            'agua_level is big')
-rule12 = Rule('if amount is regular and type is color_cotton then '
-            'agua_level is very_big')
 
-rule13 = Rule('if amount is much and type is white_synthetic then '
-            'nivel_ague is small')
-rule14 = Rule('if amount is much and type is color_synthetic then '
-            'agua_level is medium')
-rule15 = Rule('if amount is much and type is white_delicate then '
-            'agua_level is big')
-rule16 = Rule('if amount is much and type is color_delicate then'
-            'agua_level is big')  
-rule17 = Rule('if amount is much and type is white_cotton then'
-            'agua_level is big') 
-rule18 = Rule('if amount is much and type is color_cotton then'
-            'agua_level is very_big')  
- 
-rule13 = Rule('if amount is full and type is white_synthetic then '
-            'nivel_ague is medium')
-rule14 = Rule('if amount is full and type is color_synthetic then '
-            'agua_level is big')
-rule15 = Rule('if amount is full and type is white_delicate then '
-            'agua_level is big')
-rule16 = Rule('if amount is full and type is color_delicate then'
-            'agua_level is big')  
-rule17 = Rule('if amount is full and type is white_cotton then'
-            'agua_level is very_big') 
-rule18 = Rule('if amount is full and type is color_cotton then'
-            'agua_level is very_big')  
+rule1 = Rule('if left is near then '
+            'pl is normal')
+rule2 = Rule('if left is medium then '
+            'pl is high')
+rule3 = Rule('if left is far then '
+            'pl is low')
+rule4 = Rule('if left is near and center is near then '
+            'pl is low')
+rule5 = Rule('if left is medium and center is medium then '
+            'pl is low')
+ruleBlock1 = [rule1, rule2, rule3, rule4, rule5]
 
 
-rules = [value for var_name, value in locals().items() if isinstance(value, Rule)]
+rule6 = Rule('if center is near then '
+            'pc is normal')
+rule7 = Rule('if left is near and center is near and right is near then '
+            'pc is high')
+rule8 = Rule('if center is far then '
+            'pc is low')
+rule9 = Rule('if left is far and center is far then '
+            'pc is high')
+rule10 = Rule('if left is medium then '
+            'pc is high')
+rule11 = Rule('if left is medium and center is far then '
+            'pc is low')
+rule12 = Rule('if right is medium and center is far then '
+            'pc is low')
+rule13 = Rule('if left is medium and center is medium and right is medium then '
+            'pc is very_high')
+ruleBlock2 = [rule6, rule7, rule8, rule9, rule10, rule11, rule12, rule13]
 
-fuzzy_system = FuzzyInferenceSystem('mandami', 'mean_of_max')
-fuzzy_system.infer(rules, variables, adjectives, (0, 100), 1)
+
+rule14 = Rule('if right is near then '
+            'pr is normal')
+rule15 = Rule('if right is medium then '
+            'pr is high')
+rule16 = Rule('if right is far then'
+            'pr is low')  
+rule17 = Rule('if right is near and center is near then'
+            'pr is low') 
+rule18 = Rule('if right is medium and center is medium then'
+            'pr is low')  
+ruleBlock3 = [rule14, rule15, rule16, rule18]
+
+rules = ruleBlock1 + ruleBlock2 + ruleBlock3
 
 inputs = {
-    'amount': 80,
-    'type': 10,
+    'left': 40,
+    'right': 10,
+    'center': 10
 }
 
-result, sample, membership = fuzzy_system.evaluate(inputs)
-print(result)
-pl.plot(sample, membership)
-pl.savefig('img/result.png')
-pl.show()
+def evaluate(fuzzy_sistem, rules, inputs):
+    fuzzy_system.infer(rules, variables, adjectives, (0, 1), 0.01)
+    return fuzzy_system.evaluate(inputs)
 
-for var in variables.values():
-    var.plot(sample)
+    
+def plot_result(sample, membership, name):
+    fig = plt.figure()
+    plt.plot(sample, membership)
+    fig.savefig(f'img/{name}.png')
+    plt.close(fig)
+    
+
+if __name__ == "__main__":
+    left = int(input('Left distance: '))
+    right = int(input('Right distance: '))
+    center = int(input('Center ditance: '))
+    agg_mth = input('Please specify aggregation method [mamdani, larsen]:\n> ')
+    defuzz_mth = input('Please specify defuzzification method [mean_of_max, left_of_max, right_of_max, median_of_max, centroid, bisector]:\n> ')
+    fuzzy_system = FuzzyInferenceSystem(agg_mth, defuzz_mth)
+    inputs = {'left': left, 'right': right, 'center': center}
+    
+    result = evaluate(fuzzy_system, rules, inputs)
+    for var, output in result.items():
+        value = output['value']
+        print(f'The result of the variable corresponding to {var} is', value)
+        sample = output['sample']
+        plot_result(sample, output['membership'], 'ruleblock' + var)
+
+    # for var in variables.values():
+    #     var.plot(sample)
