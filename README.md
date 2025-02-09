@@ -1,8 +1,17 @@
-# fuzzy-inference-system
+# Fuzzy Inference System
 
-This repository contains the implementation of a Fuzzy Inference System.
+This repository contains an implementation of a Fuzzy Inference System (FIS), a framework that emulates human reasoning by mapping inputs to outputs using fuzzy logic. The system comprises four main components: a knowledge base, fuzzification module, inference engine, and defuzzification module.
 
-An inference system is made up of 4 main components: a knowledge base, fuzzification systems, inference systems, and defuzzification systems.
+## Introduction
+
+A Fuzzy Inference System is designed to model complex systems by applying a set of fuzzy rules to input data, resulting in outputs that can handle uncertainty and imprecision. This approach is widely used in control systems, decision-making, and pattern recognition.
+
+## Features
+
+- **Fuzzification**: Converts crisp input values into degrees of membership across various fuzzy sets using different membership functions.
+- **Fuzzy Operations**: Supports fundamental operations such as union and intersection on fuzzy sets.
+- **Inference Engine**: Applies a set of fuzzy rules to the fuzzified inputs to derive fuzzy outputs.
+- **Defuzzification**: Transforms the fuzzy outputs into crisp values for practical use.
 
 ## Fuzzification
 
